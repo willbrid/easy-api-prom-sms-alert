@@ -3,7 +3,8 @@ package alert
 import (
 	"easy-api-prom-alert-sms/config"
 	"easy-api-prom-alert-sms/pkg/httpclient"
-	"easy-api-prom-alert-sms/pkg/httpclientparam"
+	"easy-api-prom-alert-sms/pkg/httpparam"
+	"easy-api-prom-alert-sms/pkg/logger"
 
 	"fmt"
 	"strings"
@@ -11,10 +12,11 @@ import (
 
 type AlertMicroservice struct {
 	Provider *config.Provider
+	iLogger  logger.ILogger
 }
 
-func NewAlertMicroservice(provider *config.Provider) *AlertMicroservice {
-	return &AlertMicroservice{Provider: provider}
+func NewAlertMicroservice(provider *config.Provider, iLogger logger.ILogger) *AlertMicroservice {
+	return &AlertMicroservice{provider, iLogger}
 }
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {
@@ -34,6 +36,7 @@ func (ams *AlertMicroservice) Consume(url string, body string) error {
 	})
 
 	if err != nil {
+		ams.iLogger.Error(fmt.Sprintf("failed to send alert to %s: %v", url, err))
 		return err
 	}
 
@@ -41,25 +44,26 @@ func (ams *AlertMicroservice) Consume(url string, body string) error {
 }
 
 func (ams *AlertMicroservice) GetUrlAndBody(dest string, message string) (string, string, error) {
-	httpClientParam := httpclientparam.NewHttpClientParam()
+	httpParam := httpparam.NewParam()
 	providerParams := ams.Provider.Parameters
-	httpClientParam.PostParams[providerParams.Message.ParamName] = strings.ReplaceAll(providerParams.Message.ParamValue, config.AlertMessageTemplate, message)
 
-	httpClientParam.AddParam(providerParams.From.ParamMethod, providerParams.From.ParamName, providerParams.From.ParamValue)
-	httpClientParam.AddParam(providerParams.To.ParamMethod, providerParams.To.ParamName, dest)
-
+	httpParam.AddPostParam(providerParams.Message.ParamName, strings.ReplaceAll(providerParams.Message.ParamValue, config.AlertMessageTemplate, message))
+	httpParam.AddParam(providerParams.From.ParamMethod, providerParams.From.ParamName, providerParams.From.ParamValue)
+	httpParam.AddParam(providerParams.To.ParamMethod, providerParams.To.ParamName, dest)
 	if len(providerParams.ExtraParams) > 0 {
 		for _, extraParam := range providerParams.ExtraParams {
-			httpClientParam.AddParam(extraParam.ParamMethod, extraParam.ParamName, extraParam.ParamValue)
+			httpParam.AddParam(extraParam.ParamMethod, extraParam.ParamName, extraParam.ParamValue)
 		}
 	}
+
 	var encodedURL string = ams.Provider.Url
-	if len(httpClientParam.QueryParams) > 0 {
-		encodedURL = fmt.Sprintf("%s?%s", encodedURL, httpClientParam.EncodeQueryParams())
+	if len(httpParam.Query) > 0 {
+		encodedURL = fmt.Sprintf("%s?%s", encodedURL, httpParam.EncodeQuery())
 	}
 
-	body, err := httpClientParam.EncodePostParams(ams.Provider.ContentType)
+	body, err := httpParam.EncodePost(ams.Provider.ContentType)
 	if err != nil {
+		ams.iLogger.Error(fmt.Sprintf("failed to encode post parameters: %v", err))
 		return "", "", err
 	}
 

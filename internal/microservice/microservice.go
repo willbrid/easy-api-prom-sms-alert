@@ -3,6 +3,7 @@ package microservice
 import (
 	"easy-api-prom-alert-sms/config"
 	"easy-api-prom-alert-sms/internal/microservice/alert"
+	"easy-api-prom-alert-sms/pkg/logger"
 )
 
 type IAlertMicroservice interface {
@@ -14,8 +15,8 @@ type Microservices struct {
 	IAlertMicroservice IAlertMicroservice
 }
 
-func NewMicroservices(provider *config.Provider) *Microservices {
+func NewMicroservices(provider *config.Provider, iLogger logger.ILogger) *Microservices {
 	return &Microservices{
-		IAlertMicroservice: alert.NewAlertMicroservice(provider),
+		IAlertMicroservice: alert.NewAlertMicroservice(provider, iLogger),
 	}
 }
