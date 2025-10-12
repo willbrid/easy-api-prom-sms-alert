@@ -16,7 +16,7 @@ import (
 )
 
 func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logger.ILogger) {
-	microservices := microservice.NewMicroservices(&cfgfile.EasyAPIPromAlertSMS.Provider)
+	microservices := microservice.NewMicroservices(&cfgfile.EasyAPIPromAlertSMS.Provider, loggerInstance)
 	usecases := usecase.NewUsecases(&usecase.Deps{
 		Microservices: microservices,
 		AlertConfig: &domain.AlertConfig{
