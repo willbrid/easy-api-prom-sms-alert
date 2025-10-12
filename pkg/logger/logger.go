@@ -9,8 +9,6 @@ import (
 	"time"
 )
 
-type LogLevel int
-
 const (
 	INFO LogLevel = iota
 	WARNING
@@ -20,6 +18,25 @@ const (
 
 const DefaultCallerDepth = 2
 
+type LogLevel int
+
+type ILogger interface {
+	Info(message string, args ...any)
+	Warning(message string, args ...any)
+	Error(message string, args ...any)
+	Fatal(message string, args ...any)
+}
+
+type Logger struct {
+	logger *log.Logger
+}
+
+func NewLogger() *Logger {
+	logger := log.New(os.Stdout, "", 0)
+
+	return &Logger{logger}
+}
+
 var logLevels = map[LogLevel]string{
 	INFO:    "INFO",
 	WARNING: "WARNING",
@@ -27,7 +44,7 @@ var logLevels = map[LogLevel]string{
 	FATAL:   "FATAL",
 }
 
-func msg(level LogLevel, message string, args ...any) {
+func (l *Logger) msg(level LogLevel, message string, args ...any) {
 	logLevel, ok := logLevels[level]
 	if !ok {
 		logLevel = "UNKNOWN"
@@ -40,25 +57,25 @@ func msg(level LogLevel, message string, args ...any) {
 		filename = filepath.Base(file)
 	}
 
-	log.SetOutput(os.Stdout)
-	log.SetFlags(0)
-	log.Printf("[%s][%s][%s:%d] : %s", datetime, logLevel, filename, line, fmt.Sprintf(message, args...))
+	l.logger.SetOutput(os.Stdout)
+	l.logger.SetFlags(0)
+	l.logger.Printf("[%s][%s][%s:%d] : %s", datetime, logLevel, filename, line, fmt.Sprintf(message, args...))
 }
 
-func Info(message string, args ...any) {
-	msg(INFO, message, args...)
+func (l *Logger) Info(message string, args ...any) {
+	l.msg(INFO, message, args...)
 }
 
-func Warning(message string, args ...any) {
-	msg(WARNING, message, args...)
+func (l *Logger) Warning(message string, args ...any) {
+	l.msg(WARNING, message, args...)
 }
 
-func Error(message string, args ...any) {
-	msg(ERROR, message, args...)
+func (l *Logger) Error(message string, args ...any) {
+	l.msg(ERROR, message, args...)
 }
 
-func Fatal(message string, args ...any) {
-	msg(FATAL, message, args...)
+func (l *Logger) Fatal(message string, args ...any) {
+	l.msg(FATAL, message, args...)
 
 	os.Exit(1)
 }

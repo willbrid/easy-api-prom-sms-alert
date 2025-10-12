@@ -5,6 +5,7 @@ import (
 	"easy-api-prom-alert-sms/internal/handler/httphandler"
 	"easy-api-prom-alert-sms/internal/handler/middleware"
 	"easy-api-prom-alert-sms/internal/usecase"
+	"easy-api-prom-alert-sms/pkg/logger"
 
 	"net/http"
 
@@ -14,10 +15,11 @@ import (
 type Handler struct {
 	Usecases *usecase.Usecases
 	Router   *mux.Router
+	iLogger  logger.ILogger
 }
 
-func NewHandler(usecases *usecase.Usecases, router *mux.Router) *Handler {
-	return &Handler{usecases, router}
+func NewHandler(usecases *usecase.Usecases, router *mux.Router, iLogger logger.ILogger) *Handler {
+	return &Handler{usecases, router, iLogger}
 }
 
 func (h *Handler) InitRouter(cfg *config.Config) {
@@ -25,7 +27,7 @@ func (h *Handler) InitRouter(cfg *config.Config) {
 		return middleware.AuthMiddleware(h, cfg)
 	})
 
-	httphandler := httphandler.NewHTTPHandler(h.Usecases)
+	httphandler := httphandler.NewHTTPHandler(h.Usecases, h.iLogger)
 
 	h.Router.HandleFunc("/healthz", httphandler.HandleHealthCheck).Methods("GET")
 	h.Router.HandleFunc("/api-alert", httphandler.HandleAlert).Methods("POST")

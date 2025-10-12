@@ -11,10 +11,11 @@ import (
 type AlertUseCase struct {
 	iMsc        microservice.IAlertMicroservice
 	alertConfig *domain.AlertConfig
+	iLogger     logger.ILogger
 }
 
-func NewAlertUseCase(iMsc microservice.IAlertMicroservice, alertConfig *domain.AlertConfig) *AlertUseCase {
-	return &AlertUseCase{iMsc, alertConfig}
+func NewAlertUseCase(iMsc microservice.IAlertMicroservice, alertConfig *domain.AlertConfig, iLogger logger.ILogger) *AlertUseCase {
+	return &AlertUseCase{iMsc, alertConfig, iLogger}
 }
 
 func (auc *AlertUseCase) Send(alertData domain.Alert) error {
@@ -34,7 +35,7 @@ func (auc *AlertUseCase) Send(alertData domain.Alert) error {
 			}
 
 			if auc.alertConfig.Simulation {
-				logger.Info("send request with url %s and body %s", url, body)
+				auc.iLogger.Info("send request with url %s and body %s", url, body)
 			} else {
 				if err := auc.iMsc.Consume(url, body); err != nil {
 					return err
