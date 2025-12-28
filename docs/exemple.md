@@ -1,11 +1,11 @@
-# Exemple complet
+# Complete example
 
-### Mise en place d'une sandbox
+### Setting up a sandbox
 
-Nous mettrons en place un serveur vagrant **Rocky linux 9** sous une machine hôte Ubuntu 20.04 (ou >= 20.04) avec les outils **virtualbox7** et **vagrant** déjà installés.
+We will set up a vagrant **Rocky Linux 9** server on an Ubuntu 24.04 (or >= 24.04) host machine with **virtualbox7** and **vagrant** tools already installed.
 
 ```
-mkdir $HOME/easy_api_prom_sms_alert && cd $HOME/easy_api_prom_sms_alert
+mkdir $HOME/easy-api-prom-sms-alert && cd $HOME/easy-api-prom-sms-alert
 ```
 
 ```
@@ -50,19 +50,20 @@ end
 vagrant up
 ```
 
-### Installation de prometheus, alertmanager, node-exporter et easy_api_prom_sms_alert sur notre serveur monitoring-server
+### Installation of prometheus, alertmanager, node-exporter and easy-api-prom-sms-alert on our monitoring-server
 
-Dans cette section, nous allons installer sous forme conteneurisée sur le serveur vagrant **monitoring-server** : 
-- **prometheus** : pour le monitoring du serveur
-- **alertmanager** : pour recevoir les alertes prometheus et déclencher les notifications
-- **node-exporter** : pour collecter les métriques systèmes sur le serveur vagrant **monitoring-server**
-- **easy_api_prom_sms_alert** : pour le webhook qui sera configuré au niveau d'**alertmanager** qui lui permettra d'envoyer des alertes SMS
+In this section, we will install the following components in a containerized format on the vagrant **monitoring-server** :
+
+- **prometheus**: for server monitoring
+- **alertmanager**: to receive prometheus alerts and trigger notifications
+- **node-exporter**: to collect system metrics on the vagrant **monitoring-server**
+- **easy-api-prom-sms-alert**: for the webhook that will be configured within **alertmanager** to send SMS alerts
 
 ```
 vagrant ssh monitoring-server
 ```
 
-##### Mise en place de node-exporter
+##### Setting up node-exporter
 
 ```
 podman run -d --net="host" \
@@ -74,7 +75,7 @@ podman run -d --net="host" \
        --path.rootfs=/host
 ```
 
-##### Mise en place d'alertmanager
+##### Setting up alertmanager
 
 ```
 mkdir -p $HOME/monitoring/alertmanager && mkdir $HOME/monitoring/alertmanager/data && cd $HOME/monitoring/alertmanager
@@ -112,7 +113,7 @@ podman run -d --net=host \
        --log.level=debug
 ```
 
-##### Mise en place de Prometheus
+##### Setting up prometheus
 
 ```
 mkdir -p $HOME/monitoring/prometheus && mkdir $HOME/monitoring/prometheus/data && mkdir $HOME/monitoring/prometheus/rules && cd $HOME/monitoring/prometheus
@@ -187,19 +188,19 @@ podman run -d --net=host \
     --web.enable-admin-api
 ```
 
-##### Mise en place de easy_api_prom_sms_alert
+##### Setting up easy-api-prom-sms-alert
 
 ```
 mkdir -p $HOME/monitoring/alert && cd $HOME/monitoring/alert
 ```
 
-Par la suite, il faudrait utiliser l'un des fichiers de configuration (à personnaliser) ci-dessous pour paramètrer l'intégration avec un fournisseur : **Twilio**, **WhatsApp**,... 
+Next, you would need to use one of the configuration files (which you can customize) below to set up the integration with a provider : **Twilio**, **WhatsApp**,...
 
 ```
 vi $HOME/monitoring/alert/config.yaml
 ```
 
-**Intégration avec Twilio**
+**Twilio integration**
 
 ```
 easy_api_prom_sms_alert:
@@ -234,14 +235,14 @@ easy_api_prom_sms_alert:
     - "+zzzzzzz"
 ```
 
-**XXXXXXX** est la chaine **SID** à récupérer sur la plateforme **Twilio**. <br>
-**YYYYYYY** est le base64 de la chaine **SID:TOKEN** à récupérer sur la plateforme **Twilio**. <br>
-**+xxxxxxx** est le numéro émetteur. <br>
-**+yyyyyyy** et **+zzzzzzz** sont les numéros de téléphone qui recevront les alertes sms.
+**XXXXXXX** is the **SID** string to retrieve from the **Twilio** platform. <br>
+**YYYYYYY** is the base64 hash of the **SID:TOKEN** string to retrieve from the **Twilio** platform. <br>
+**+xxxxxxx** is the sender's number. <br>
+**+yyyyyyy** and **+zzzzzzz** are the phone numbers that will receive SMS alerts.
 
-**Référence** : [Twilio Documentation](https://www.twilio.com/en-us/blog/send-sms-twilio-shell-script-curl)
+**Reference** : [Twilio Documentation](https://www.twilio.com/en-us/blog/send-sms-twilio-shell-script-curl)
 
-**Intégration avec WhatsApp**
+**WhatsApp integration**
 
 ```
 easy_api_prom_sms_alert:
@@ -276,12 +277,12 @@ easy_api_prom_sms_alert:
     - "+yyyyyyy"
 ```
 
-**API_TOKEN** est le token récupérable sur la plateforme **Wassenger**. <br>
-**+xxxxxxx** et **+yyyyyyy** sont les comptes whatsapp qui recevront les alertes sms.
+**API_TOKEN** is the token that can be retrieved on the **Wassenger** platform. <br>
+**+xxxxxxx** and **+yyyyyyy** are the WhatsApp accounts that will receive SMS alerts.
 
-**Référence** : [Wassenger Documentation](https://app.wassenger.com/docs/)
+**Reference** : [Wassenger Documentation](https://app.wassenger.com/docs/)
 
-- **Démarrage de easy_api_prom_sms_alert avec l'un des contenus d'intégration**
+- **Starting easy-api-prom-sms-alert with one of the integration contents**
 
 ```
 podman run -d --net=host \
@@ -294,10 +295,10 @@ podman run -d --net=host \
 
 ### Test
 
-Afin de simuler l'arrêt du serveur **monitoring-server**, nous stoppons le container **node-exporter**.
+In order to simulate the shutdown of the **monitoring-server**, we stop the **node-exporter** container.
 
 ```
 podman container stop node-exporter
 ```
 
-Après une minute, nous verrons une alerte sms sur notre téléphone (**intégration avec Twilio**) ou sur notre compte whatsApp (**intégration avec WhatsApp**).
+After one minute, we will see an SMS alert on our phone (**Twilio integration**) or on our WhatsApp account (**WhatsApp integration**).

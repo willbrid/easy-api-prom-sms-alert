@@ -1,24 +1,24 @@
-# Easy_api_prom_sms_alert
+# Easy-api-prom-sms-alert
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/LICENSE) [![Build and Release](https://github.com/willbrid/easy_api_prom_sms_alert/actions/workflows/cicd.yml/badge.svg)](https://github.com/willbrid/easy_api_prom_sms_alert/actions/workflows/cicd.yml)
 
-**Easy_api_prom_sms_alert** est un webhook pour prometheus permettant d'envoyer des alertes sms avec n'importe quel fournisseur de sms exposant une api.
+**Easy-api-prom-sms-alert** is a *prometheus* webhook that allows sending SMS alerts using any SMS provider exposing an API.
 
-### Problème
+### Issue
 
-Lorsque **Prometheus** détecte des conditions anormales dans les systèmes surveillés, il déclenche des alertes pour informer **alertmanager** d'effectuer des notifications SMS. Cependant il existe plusieurs types de fournisseur de SMS avec leur propre spécification. Ainsi intégrer quelques uns dans alertmanager, rendrait la configuration complexe à gérer. 
+When *prometheus* detects abnormal conditions in the monitored systems, it triggers alerts to notify Alertmanager to send SMS notifications. However, there are many types of SMS providers, each with its own specifications. Integrating several of them directly into Alertmanager would make the configuration complex and difficult to manage.
 
 ### Solution
 
-Avec **Easy_api_prom_sms_alert**, les utilisateurs auront la possibilité de choisir n'importe quel fournisseur de services SMS qui expose une API en **HTTP POST**. Cela leur donnera la liberté de sélectionner le fournisseur qui répond au mieux à leurs besoins en termes de coût, de fiabilité et de couverture géographique.
+With **Easy-api-prom-sms-alert**, users can choose any SMS service provider that exposes an HTTP POST API. This gives them the freedom to select the provider that best meets their needs in terms of cost and reliability.
 
 ### Documentation
 
-1- [Installation](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/docs/installation.md) <br>
-2- [Configuration](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/docs/configuration.md) <br>
-3- [Utilisation](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/docs/utilisation.md) <br>
-4- [Exemple complet](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/docs/exemple.md)
+1- [Installation](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/installation.md) <br>
+2- [Configuration](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/configuration.md) <br>
+3- [Utilisation](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/utilisation.md) <br>
+4- [Exemple complet](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/exemple.md)
 
-### Licence
+### License
 
-Ce projet est sous licence MIT - voir le fichier [LICENSE](https://github.com/willbrid/easy_api_prom_sms_alert/blob/main/LICENSE) pour plus de détails.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/LICENSE) file for more details.

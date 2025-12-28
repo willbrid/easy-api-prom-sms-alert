@@ -1,6 +1,6 @@
-# Utilisation
+# Usage
 
-Notre fichier de configuration précédent montre que l'authentification **Basic** est activée. Ainsi il faudrait générer le **base64** de la chaine **username:password** afin de l'utiliser dans le header **Authorization**.
+Our previous configuration file shows that **Basic** authentication is enabled. Therefore, we need to generate the **base64** version of the **username:password** string in order to use it in the **Authorization** header.
 
 ```
 echo -n test:test@test | base64
@@ -10,7 +10,7 @@ echo -n test:test@test | base64
 dGVzdDp0ZXN0QHRlc3Q=
 ```
 
-#### **Test à effectuer avec curl**
+#### **Test to be performed with curl**
 
 ```
 curl -k --location 'https://localhost:8000/api-alert' \
@@ -56,9 +56,9 @@ curl -k --location 'https://localhost:8000/api-alert' \
 }'
 ```
 
-#### **Intégration dans Alertmanager**
+#### **Integration with Alertmanager**
 
-Pour intégrer **Easy_api_prom_sms_alert** dans **Alertmanager**, vous devez configurer un webhook en ajoutant un récepteur webhook à votre configuration d' **Alertmanager**.
+To integrate **Easy-api-prom-sms-alert** into **Alertmanager**, you need to configure a webhook by adding a webhook receiver to your **Alertmanager** configuration.
 
 ```
 receivers:
@@ -74,7 +74,7 @@ receivers:
         insecure_skip_verify: true
 ```
 
-Pour visualiser le résultat en mode **simulation**, vous devez consulter les logs du conteneur.
+To view the result in **simulation** mode, you need to consult the container logs.
 
 ```
 docker container logs alert-sms-sender

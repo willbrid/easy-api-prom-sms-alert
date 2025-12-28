@@ -1,8 +1,8 @@
 # Installation
 
-Ces actions sont effectuées sous un serveur linux.
+These actions are performed under a Linux server.
 
-### Préréquis
+### Prerequisites
 
 ```
 mkdir -p $HOME/alert-prometheus && cd $HOME/alert-prometheus
@@ -50,7 +50,7 @@ easy_api_prom_sms_alert:
 ```
 
 
-### Installation via un package sous Linux
+### Installation via a package under Linux
 
 ```
 cd $HOME && mkdir -p alert-prometheus && cd alert-prometheus
@@ -68,11 +68,11 @@ tar -xvzf easy_api_prom_sms_alert_<VERSION>_linux_amd64.tar.gz
 ./easy_api_prom_sms_alert_<VERSION>_linux_amd64 --config-file ./config.yaml
 ```
 
-Remplacez **\<VERSION\>** par le numéro de version souhaité (supérieur ou égal à **1.3.3**).
+Replace **\<VERSION\>** with the desired version number (greater than or equal to **1.3.4**).
 
-### Installation via un conteneur docker
+### Installation via a Docker container
 
---- **Installation en utilisant le fichier de configuration par défaut et en activant le protocole https**
+--- **Installation using the default configuration file and enabling the https protocol**
 
 ```
 docker run -d -p 8000:5957 \
@@ -82,12 +82,11 @@ docker run -d -p 8000:5957 \
        willbrid/easy-api-prom-sms-alert:latest
 ```
 
-Dans cet exemple, le port par défaut **5957** interne au container est mappé au port externe **8000**. 
+In this example, the default port **5957** internal to the container is mapped to the external port **8000**.
 
---- **Installation en utilisant un volume persistent pour le fichier config.yaml et en activant le protocole https**
+--- **Installation using a persistent volume for the config.yaml file and enabling the https protocol**
 
-L'idée ici est de pouvoir permettre la personnalisation du fichier de configuration **config.yaml**. <br>
-L'activation du protocole **https** utilise par défaut des fichiers **server.crt** et **server.key** dans le repertoire **/etc/easy-api-prom-sms-alert/tls/server.key** à l'intérieur du conteneur. 
+The idea here is to allow customization of the **config.yaml** configuration file. Enabling the **https** protocol uses **server.crt** and **server.key** files by default, located in the **/etc/easy-api-prom-sms-alert/tls/server.key** directory within the container.
 
 ```
 docker run -d -p 8000:5957 \
@@ -98,9 +97,9 @@ docker run -d -p 8000:5957 \
        willbrid/easy-api-prom-sms-alert:latest
 ```
 
---- **Installation en utilisant un volume persistent pour le fichier config.yaml et en activant le protocole https avec les fichiers tls**
+--- **Installation using a persistent volume for the config.yaml file and enabling the https protocol with the tls files**
 
-Nous supposerons l'existence de nos fichiers tls : **server.crt** pour le certificat et **server.key** la clé privée, dans le repertoire **$HOME/alert-prometheus**.
+We will assume the existence of our tls files: **server.crt** for the certificate and **server.key** the private key, in the directory **$HOME/alert-prometheus**.
 
 ```
 docker run -d -p 8000:5957 \

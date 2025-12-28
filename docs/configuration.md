@@ -1,94 +1,94 @@
 # Configuration
 
-### Options de configuration
+### Configuration options
 
-- **Mode binaire**
+- **Binary mode**
 
-|Option          |Obligatoire|Description|
-|----------------|-----------|-----------|
-`--config-file`      |oui|option permettant de préciser l'emplacement du fichier de configuration
-`--port`|non|option permettant de préciser le port (par défaut : `5957`)
-`--enable-https`     |non|option permettant d'activer ou désactiver la communication tls (par défaut : `false`)
-`--cert-file`|non|option permettant de préciser l'emplacement du fichier de certificat (obligatoire si l'option `--enable-https` est à `true`)
-`--key-file`|non|option permettant de préciser l'emplacement du fichier de clé privée (obligatoire si l'option `--enable-https` est à `true`)
+|Option          |Mandatory|Description|
+|----------------|---------|-----------|
+`--config-file`      |yes|option to specify the location of the configuration file
+`--port`|no|option to specify the port (default : `5957`)
+`--enable-https`     |no|Option to enable or disable TLS communication (default : `false`)
+`--cert-file`|no|option to specify the location of the certificate file (required if the `--enable-https` option is set to `true`)
+`--key-file`|no|option to specify the location of the private key file (required if the `--enable-https` option is set to `true`)
 
-- **Mode conteneur**
+- **Container mode**
 
-|Variable d'environnement|Obligatoire|Description|
-|------------------------|-----------|-----------|
-`EASY_API_PROM_SMS_ALERT_CONFIG_FILE`|non|variable permettant de préciser l'emplacement du fichier de configuration dans le conteneur (par défaut: `/etc/easy-api-prom-sms-alert/config.yaml`). Il peut être écrasé avec un fichier externe si celui-ci est monté en volume avec le même nom et au même emplacement.
-`EASY_API_PROM_SMS_ALERT_PORT`|non|variable permettant de préciser le port (par défaut : `5957`)
-`EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS`|non|variable permettant d'activer ou désactiver la communication tls (par défaut : `true`)
-`EASY_API_PROM_SMS_ALERT_CERT_FILE`|non|variable permettant de préciser l'emplacement du fichier de certificat (obligatoire si la variable `EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS` est à `true`, par défaut : `/etc/easy-api-prom-sms-alert/tls/server.crt`)
-`EASY_API_PROM_SMS_ALERT_KEY_FILE`|non|variable permettant de préciser l'emplacement du fichier de clé privée (obligatoire si la variable `EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS` est à `true`, par défaut : `/etc/easy-api-prom-sms-alert/tls/server.key`)
+|Environment variable|Mandatory|Description|
+|--------------------|---------|-----------|
+`EASY_API_PROM_SMS_ALERT_CONFIG_FILE`|no|a variable that specifies the location of the configuration file within the container (default: `/etc/easy-api-prom-sms-alert/config.yaml`). It can be overwritten by an external file if the latter is mounted on a volume with the same name and in the same location.
+`EASY_API_PROM_SMS_ALERT_PORT`|no|variable to specify the port (default: `5957`)
+`EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS`|no|variable to enable or disable TLS communication (default: `true`)
+`EASY_API_PROM_SMS_ALERT_CERT_FILE`|no|variable to specify the location of the certificate file (required if the variable `EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS` is set to `true`, default: `/etc/easy-api-prom-sms-alert/tls/server.crt`)
+`EASY_API_PROM_SMS_ALERT_KEY_FILE`|no|variable to specify the location of the private key file (required if the variable `EASY_API_PROM_SMS_ALERT_ENABLE_HTTPS` is set to `true`, default: `/etc/easy-api-prom-sms-alert/tls/server.key`)
 
-### Fichier de configuration
+### Configuration file
 
 ```
-# Documentation sur le fichier de configuration
+# Documentation about the configuration file
 easy_api_prom_sms_alert:
-  # Mode simulation du webhook : true -> les sms sont envoyés dans les logs et false (valeur en production) -> les sms sont envoyés 
-  # via l'api du fournisseur
+  # Webhook simulation mode: true -> SMS messages are written to logs
+  # and false (production value) -> SMS messages are sent via the provider API
   simulation: true
   
-  # Paramètre d'authentification au webhook
+  # Webhook authentication parameters
   auth:
-    # Activation de l'authentification : true -> les paramètres username et password seront requis
-    # Pour s'authentifier en header basic, il faudrait générer le base64 de la chaine username:password
+    # Enable authentication: true -> username and password parameters are required
+    # To authenticate using Basic header, you must generate the base64 of the string username:password
     enabled: true
-    # Nom d'utilisateur
+    # Username
     username: test
-    # Mot de passe
+    # Password
     password: test@test
 
-  # Paramètre du fournisseur de SMS
+  # SMS provider parameters
   provider:
-    # Adresse de l'api du fournisseur
+    # Provider API URL
     url: "http://localhost:5797"
-    # L'entête content-type acceptée par le fournisseur
-    # Valeurs possibles : "application/json", "application/x-www-form-urlencoded"
+    # Content-Type header accepted by the provider
+    # Possible values: "application/json", "application/x-www-form-urlencoded"
     content_type: "application/json"
-    # Paramètre d'activation de la vérification de certificat
-    # - true -> le certificat de l'api en https du fournisseur ne sera pas vérifié
-    # - false -> le certificat de l'api en https du fournisseur sera vérifié (valeur par défaut)
+    # Certificate verification parameter
+    # - true -> the HTTPS provider API certificate will not be verified
+    # - false -> the HTTPS provider API certificate will be verified (default value)
     insecure_skip_verify: false
-    # Paramètre d'authentification à l'api du fournisseur
+    # Provider API authentication parameters
     authentication:
-      # Activation de l'authentification à l'api du fournisseur : 
-      # - true -> l'api du fournisseur nécessite une authentification et dans ce cas 
-      #   les paramètres authorization_type et authorization_credential sont obligatoires
-      # - false -> l'api du fournisseur ne nécessite pas d'authentification
+      # Enable provider API authentication:
+      # - true -> the provider API requires authentication, and in this case
+      #   the authorization_type and authorization_credential parameters are mandatory
+      # - false -> the provider API does not require authentication
       enabled: false
-      # Paramètre d'autorisation d'entête http : Authorization
-      # Type d'entête en exemple : Bearer, Basic, ApiKey
+      # HTTP Authorization header parameter
+      # Example header types: Bearer, Basic, ApiKey
       authorization_type: ''
-      # Chaine de caractères représentant la clé secret
+      # String representing the secret key
       authorization_credential: ''
-    # Paramètre des champs du corps de requête http de l'api    
+    # HTTP request body field parameters for the provider API
     parameters:
-      # Champ d'expéditeur
+      # Sender field
       from:
-        # Nom du champ d'expéditeur
+        # Sender field name
         param_name: "from"
-        # Valeur du champ d'expéditeur
+        # Sender field value
         param_value: "+1234567890"
-        # méthode d'envoie du champ d'expéditeur : post ou query
+        # Method used to send the sender field: post or query
         param_method: "post"
-      # Champ du destinataire
+      # Recipient field
       to:
-        # Nom du champ destinataire
+        # Recipient field name
         param_name: "to"
-        # Valeur par défaut du champ destinataire qui doit correspondre à l'un des noms des récipients configurés
-        # dans le cas où le champ team est inexistant dans un champ alert
+        # Default recipient field value, which must match one of the configured recipient group names
+        # in case the team field is missing in an alert field
         param_value: "administration"
-        # méthode d'envoie du champ destinataire : post ou query
+        # Method used to send the recipient field: post or query
         param_method: "query"
-      # Champ du contenu du SMS
+      # SMS content field
       message:
-        # Nom du champ du contenu du SMS
+        # SMS content field name
         param_name: "content"
-      # Paramètres supplémentaires du fournisseur. Ils peuvent être obligatoires ou non selon les spécifications d'intégration du fournisseur
-      # Les valeurs ci-dessous sont des exemples. Il faudrait lire la documentation du fournisseur pour mieux configurer
+      # Additional provider parameters. They may be mandatory or optional depending on the provider integration specifications
+      # The values below are examples. You should read the provider documentation for proper configuration
       extra_params:
       - param_name: "pn1"
         param_value: "pv1"
@@ -96,14 +96,14 @@ easy_api_prom_sms_alert:
       - param_name: "pn2"
         param_value: "pv2"
         param_method: "query"
-    # Paramètre de timeout à définir pour consommer l'api du fournisseur  (par défaut : 10s)
+    # Timeout parameter for calling the provider API (default: 10s)
     timeout: 10s
 
-  # Paramètre des différents destinataires qui recevront les SMS
+  # Parameters for the different recipients who will receive SMS messages
   recipients:
-  # nom de groupe du destinataire
+  # Recipient group name
   - name: "administration"
-    # Membres du groupe de destinataire 
+    # Members of the recipient group
     members:
     - "+1234567890"
     - "+0987654321"
