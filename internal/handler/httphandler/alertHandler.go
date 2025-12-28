@@ -1,7 +1,7 @@
 package httphandler
 
 import (
-	"easy-api-prom-alert-sms/internal/domain"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/domain"
 
 	"encoding/json"
 	"net/http"

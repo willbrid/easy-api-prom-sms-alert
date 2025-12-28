@@ -1,10 +1,10 @@
 package usecase
 
 import (
-	"easy-api-prom-alert-sms/internal/domain"
-	"easy-api-prom-alert-sms/internal/microservice"
-	"easy-api-prom-alert-sms/internal/usecase/alert"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/domain"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase/alert"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
 type IAlertUsecase interface {

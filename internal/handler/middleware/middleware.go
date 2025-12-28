@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
 
 	"encoding/base64"
 	"net/http"

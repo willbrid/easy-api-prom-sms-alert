@@ -1,7 +1,7 @@
 package config
 
 import (
-	"easy-api-prom-alert-sms/pkg/httpparam"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
 
 	"fmt"
 	"time"

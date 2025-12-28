@@ -1,10 +1,10 @@
 package alert
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/pkg/httpclient"
-	"easy-api-prom-alert-sms/pkg/httpparam"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
 	"fmt"
 	"strings"

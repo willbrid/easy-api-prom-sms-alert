@@ -1,6 +1,6 @@
 package recipienthelper
 
-import "easy-api-prom-alert-sms/config"
+import "github.com/willbrid/easy-api-prom-alert-sms/config"
 
 // GetRecipientMembers get recipient members from recipient name and Recipient slice
 func GetRecipientMembers(recipients []config.Recipient, recipientName string) []string {

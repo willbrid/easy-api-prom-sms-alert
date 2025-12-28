@@ -1,9 +1,9 @@
 package main
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/internal/app"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/app"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
 	"github.com/go-playground/validator/v10"
 )

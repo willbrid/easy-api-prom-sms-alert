@@ -1,7 +1,7 @@
 package config_test
 
 import (
-	"easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
 
 	"bytes"
 	"fmt"

@@ -1,8 +1,8 @@
 package httphandler
 
 import (
-	"easy-api-prom-alert-sms/internal/usecase"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
 type HTTPHandler struct {

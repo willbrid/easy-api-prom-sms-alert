@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/internal/handler/httphandler"
-	"easy-api-prom-alert-sms/internal/handler/middleware"
-	"easy-api-prom-alert-sms/internal/usecase"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler/httphandler"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler/middleware"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
 	"net/http"
 

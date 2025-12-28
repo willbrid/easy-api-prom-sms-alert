@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
 
 	"github.com/prometheus/alertmanager/template"
 )

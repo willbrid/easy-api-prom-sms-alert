@@ -1,9 +1,9 @@
 package microservice
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/internal/microservice/alert"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice/alert"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
 type IAlertMicroservice interface {

@@ -1,8 +1,8 @@
 package middleware_test
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/internal/handler/middleware"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler/middleware"
 
 	"bytes"
 	"io"

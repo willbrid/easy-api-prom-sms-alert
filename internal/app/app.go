@@ -1,13 +1,13 @@
 package app
 
 import (
-	"easy-api-prom-alert-sms/config"
-	"easy-api-prom-alert-sms/internal/domain"
-	"easy-api-prom-alert-sms/internal/handler"
-	"easy-api-prom-alert-sms/internal/microservice"
-	"easy-api-prom-alert-sms/internal/usecase"
-	"easy-api-prom-alert-sms/pkg/httpserver"
-	"easy-api-prom-alert-sms/pkg/logger"
+	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/domain"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpserver"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
 	"fmt"
 	"os"
