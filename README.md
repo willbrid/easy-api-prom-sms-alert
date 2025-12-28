@@ -16,8 +16,8 @@ With **Easy-api-prom-sms-alert**, users can choose any SMS service provider that
 
 1- [Installation](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/installation.md) <br>
 2- [Configuration](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/configuration.md) <br>
-3- [Utilisation](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/utilisation.md) <br>
-4- [Exemple complet](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/exemple.md)
+3- [Usage](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/usage.md) <br>
+4- [Complete example](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/complete-example.md)
 
 ### License
 
