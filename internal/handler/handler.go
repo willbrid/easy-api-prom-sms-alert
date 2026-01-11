@@ -13,19 +13,19 @@ import (
 )
 
 type Handler struct {
-	Usecases *usecase.Usecases
-	Router   *mux.Router
-	iLogger  logger.ILogger
+	Usecases        *usecase.Usecases
+	Router          *mux.Router
+	iAuthMiddleware middleware.IAuthMiddleware
+	iLogger         logger.ILogger
 }
 
-func NewHandler(usecases *usecase.Usecases, router *mux.Router, iLogger logger.ILogger) *Handler {
-	return &Handler{usecases, router, iLogger}
+func NewHandler(usecases *usecase.Usecases, router *mux.Router, iAuthMiddleware middleware.IAuthMiddleware, iLogger logger.ILogger) *Handler {
+	return &Handler{usecases, router, iAuthMiddleware, iLogger}
 }
 
 func (h *Handler) InitRouter(cfg *config.Config) {
-	h.Router.Use(func(h http.Handler) http.Handler {
-		authMiddleware := middleware.NewAuthMiddleware()
-		return authMiddleware.Authenticate(h, cfg)
+	h.Router.Use(func(httpHandler http.Handler) http.Handler {
+		return h.iAuthMiddleware.Authenticate(httpHandler, cfg)
 	})
 
 	httphandler := httphandler.NewHTTPHandler(h.Usecases, h.iLogger)

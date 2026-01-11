@@ -8,6 +8,10 @@ import (
 	"strings"
 )
 
+type IAuthMiddleware interface {
+	Authenticate(next http.Handler, cfg *config.Config) http.Handler
+}
+
 type AuthMiddleware struct{}
 
 func NewAuthMiddleware() *AuthMiddleware {

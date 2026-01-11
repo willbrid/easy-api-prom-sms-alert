@@ -4,6 +4,7 @@ import (
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/domain"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler"
+	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler/middleware"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpserver"
@@ -33,7 +34,8 @@ func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logg
 		cfgflag.CertFile,
 		cfgflag.KeyFile,
 	)
-	handlerInstance := handler.NewHandler(usecases, httpServer.Router, loggerInstance)
+	authMiddleware := middleware.NewAuthMiddleware()
+	handlerInstance := handler.NewHandler(usecases, httpServer.Router, authMiddleware, loggerInstance)
 	handlerInstance.InitRouter(cfgfile)
 	httpServer.Start()
 
