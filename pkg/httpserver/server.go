@@ -39,19 +39,18 @@ func NewServer(address string, isHttps bool, certFile, keyFile string) *Server {
 }
 
 func (s *Server) Start() {
-	if s.isHttps {
-		go func() {
-			s.notify <- s.instance.ListenAndServeTLS(s.certFile, s.keyFile)
+	go func() {
+		var err error
 
-			close(s.notify)
-		}()
-	} else {
-		go func() {
-			s.notify <- s.instance.ListenAndServe()
+		if s.isHttps {
+			err = s.instance.ListenAndServeTLS(s.certFile, s.keyFile)
+		} else {
+			err = s.instance.ListenAndServe()
+		}
 
-			close(s.notify)
-		}()
-	}
+		s.notify <- err
+		close(s.notify)
+	}()
 }
 
 func (s *Server) Notify() <-chan error {
