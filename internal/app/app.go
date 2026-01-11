@@ -35,7 +35,7 @@ func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logg
 		cfgflag.KeyFile,
 	)
 	authMiddleware := middleware.NewAuthMiddleware()
-	handlerInstance := handler.NewHandler(usecases, httpServer.Router, authMiddleware, loggerInstance)
+	handlerInstance := handler.NewHandler(usecases, httpServer, authMiddleware, loggerInstance)
 	handlerInstance.InitRouter(cfgfile)
 	httpServer.Start()
 

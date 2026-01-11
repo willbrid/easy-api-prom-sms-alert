@@ -10,6 +10,13 @@ import (
 
 const _defaultShutdownTimeout time.Duration = 5 * time.Second
 
+type IServer interface {
+	GetRouter() *mux.Router
+	Start()
+	Notify() <-chan error
+	Stop() error
+}
+
 type Server struct {
 	instance        *http.Server
 	Router          *mux.Router
@@ -36,6 +43,10 @@ func NewServer(address string, isHttps bool, certFile, keyFile string) *Server {
 		keyFile:         keyFile,
 		shutdownTimeout: _defaultShutdownTimeout,
 	}
+}
+
+func (s *Server) GetRouter() *mux.Router {
+	return s.Router
 }
 
 func (s *Server) Start() {
