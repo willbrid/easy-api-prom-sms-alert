@@ -11,12 +11,13 @@ import (
 )
 
 type AlertMicroservice struct {
-	Provider *config.Provider
-	iLogger  logger.ILogger
+	Provider    *config.Provider
+	iHTTPClient httpclient.IHTTPClient
+	iLogger     logger.ILogger
 }
 
-func NewAlertMicroservice(provider *config.Provider, iLogger logger.ILogger) *AlertMicroservice {
-	return &AlertMicroservice{provider, iLogger}
+func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iLogger logger.ILogger) *AlertMicroservice {
+	return &AlertMicroservice{provider, iHTTPClient, iLogger}
 }
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {
@@ -29,7 +30,7 @@ func (ams *AlertMicroservice) Consume(url string, body string) error {
 		headers["Authorization"] = fmt.Sprintf("%s %s", provider.Authentication.AuthorizationType, provider.Authentication.AuthorizationCredential)
 	}
 
-	_, err := httpclient.Post(url, strings.NewReader(body), httpclient.Options{
+	_, err := ams.iHTTPClient.Post(url, strings.NewReader(body), httpclient.Options{
 		Headers:            headers,
 		Timeout:            provider.Timeout,
 		InsecureSkipVerify: provider.InsecureSkipVerify,

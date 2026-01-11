@@ -7,40 +7,42 @@ import (
 	"time"
 )
 
+const (
+	MaxIdleConnections int = 20
+)
+
+type IHTTPClient interface {
+	Post(url string, body io.Reader, options Options) (*http.Response, error)
+}
+
+type HTTPClient struct {
+	httpClient *http.Client
+}
+
 type Options struct {
 	Headers            map[string]string
 	Timeout            time.Duration
 	InsecureSkipVerify bool
 }
 
-var httpClient *http.Client
-
-const (
-	MaxIdleConnections int = 20
-)
-
-func init() {
-	httpClient = createHTTPClient()
-}
-
-func createHTTPClient() *http.Client {
-	client := &http.Client{
+func NewHTTPClient() *HTTPClient {
+	httpClient := &http.Client{
 		Transport: &http.Transport{
 			MaxIdleConnsPerHost: MaxIdleConnections,
 		},
 	}
 
-	return client
+	return &HTTPClient{httpClient}
 }
 
-func setHTTPClientOptions(options Options) {
-	httpClient.Timeout = options.Timeout
-	transport := httpClient.Transport.(*http.Transport)
+func (h *HTTPClient) setHTTPClientOptions(options Options) {
+	h.httpClient.Timeout = options.Timeout
+	transport := h.httpClient.Transport.(*http.Transport)
 	transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: options.InsecureSkipVerify}
 }
 
-func Post(url string, body io.Reader, options Options) (*http.Response, error) {
-	setHTTPClientOptions(options)
+func (h *HTTPClient) Post(url string, body io.Reader, options Options) (*http.Response, error) {
+	h.setHTTPClientOptions(options)
 
 	req, err := http.NewRequest("POST", url, body)
 	if err != nil {
@@ -51,5 +53,5 @@ func Post(url string, body io.Reader, options Options) (*http.Response, error) {
 		req.Header.Set(key, value)
 	}
 
-	return httpClient.Do(req)
+	return h.httpClient.Do(req)
 }

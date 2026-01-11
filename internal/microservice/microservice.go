@@ -3,6 +3,7 @@ package microservice
 import (
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice/alert"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
@@ -11,12 +12,18 @@ type IAlertMicroservice interface {
 	GetUrlAndBody(dest string, message string) (string, string, error)
 }
 
+type Deps struct {
+	Provider    *config.Provider
+	IHTTPClient httpclient.IHTTPClient
+	ILogger     logger.ILogger
+}
+
 type Microservices struct {
 	IAlertMicroservice IAlertMicroservice
 }
 
-func NewMicroservices(provider *config.Provider, iLogger logger.ILogger) *Microservices {
+func NewMicroservices(deps Deps) *Microservices {
 	return &Microservices{
-		IAlertMicroservice: alert.NewAlertMicroservice(provider, iLogger),
+		IAlertMicroservice: alert.NewAlertMicroservice(deps.Provider, deps.IHTTPClient, deps.ILogger),
 	}
 }
