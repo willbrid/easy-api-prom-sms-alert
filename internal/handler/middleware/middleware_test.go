@@ -119,7 +119,8 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 		resp.WriteHeader(http.StatusNoContent)
 	}).Methods("POST")
 	router.Use(func(h http.Handler) http.Handler {
-		return middleware.AuthMiddleware(h, configLoaded)
+		authMiddleware := middleware.NewAuthMiddleware()
+		return authMiddleware.Authenticate(h, configLoaded)
 	})
 	router.ServeHTTP(rr, req)
 

@@ -24,7 +24,8 @@ func NewHandler(usecases *usecase.Usecases, router *mux.Router, iLogger logger.I
 
 func (h *Handler) InitRouter(cfg *config.Config) {
 	h.Router.Use(func(h http.Handler) http.Handler {
-		return middleware.AuthMiddleware(h, cfg)
+		authMiddleware := middleware.NewAuthMiddleware()
+		return authMiddleware.Authenticate(h, cfg)
 	})
 
 	httphandler := httphandler.NewHTTPHandler(h.Usecases, h.iLogger)
