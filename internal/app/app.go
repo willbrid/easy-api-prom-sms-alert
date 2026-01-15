@@ -8,6 +8,7 @@ import (
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpserver"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
@@ -19,10 +20,12 @@ import (
 
 func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logger.ILogger) {
 	httpClient := httpclient.NewHTTPClient()
+	paramFactory := httpparam.NewParamFactory()
 	microservices := microservice.NewMicroservices(microservice.Deps{
-		Provider:    &cfgfile.EasyAPIPromAlertSMS.Provider,
-		IHTTPClient: httpClient,
-		ILogger:     loggerInstance,
+		Provider:      &cfgfile.EasyAPIPromAlertSMS.Provider,
+		IHTTPClient:   httpClient,
+		IParamFactory: paramFactory,
+		ILogger:       loggerInstance,
 	})
 	usecases := usecase.NewUsecases(&usecase.Deps{
 		Microservices: microservices,

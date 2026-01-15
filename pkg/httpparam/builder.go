@@ -19,7 +19,7 @@ type Param struct {
 	Query map[string]string
 }
 
-func NewParam() *Param {
+func newParam() *Param {
 	return &Param{
 		Post:  make(map[string]string, 0),
 		Query: make(map[string]string, 0),

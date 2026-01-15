@@ -11,13 +11,14 @@ import (
 )
 
 type AlertMicroservice struct {
-	Provider    *config.Provider
-	iHTTPClient httpclient.IHTTPClient
-	iLogger     logger.ILogger
+	Provider      *config.Provider
+	iHTTPClient   httpclient.IHTTPClient
+	iParamFactory httpparam.IParamFactory
+	iLogger       logger.ILogger
 }
 
-func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iLogger logger.ILogger) *AlertMicroservice {
-	return &AlertMicroservice{provider, iHTTPClient, iLogger}
+func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iParamFactory httpparam.IParamFactory, iLogger logger.ILogger) *AlertMicroservice {
+	return &AlertMicroservice{provider, iHTTPClient, iParamFactory, iLogger}
 }
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {
@@ -45,7 +46,7 @@ func (ams *AlertMicroservice) Consume(url string, body string) error {
 }
 
 func (ams *AlertMicroservice) GetUrlAndBody(dest string, message string) (string, string, error) {
-	httpParam := httpparam.NewParam()
+	httpParam := ams.iParamFactory.GetNewParam()
 	providerParams := ams.Provider.Parameters
 
 	httpParam.AddPostParam(providerParams.Message.ParamName, strings.ReplaceAll(providerParams.Message.ParamValue, config.AlertMessageTemplate, message))
