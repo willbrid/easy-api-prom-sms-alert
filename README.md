@@ -12,6 +12,8 @@ When *prometheus* detects abnormal conditions in the monitored systems, it trigg
 
 With **Easy-api-prom-sms-alert**, users can choose any SMS service provider that exposes an HTTP POST API. This gives them the freedom to select the provider that best meets their needs in terms of cost and reliability.
 
+This tool supports multiple providers, such as **Twilio**, **WhatsApp** and **Slack**.
+
 ### Documentation
 
 1- [Installation](https://github.com/willbrid/easy-api-prom-sms-alert/blob/main/docs/installation.md) <br>

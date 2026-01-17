@@ -194,13 +194,13 @@ podman run -d --net=host \
 mkdir -p $HOME/monitoring/alert && cd $HOME/monitoring/alert
 ```
 
-Next, you would need to use one of the configuration files (which you can customize) below to set up the integration with a provider : **Twilio**, **WhatsApp**,...
+Next, you would need to use one of the configuration files (which you can customize) below to set up the integration with a provider : **Twilio**, **WhatsApp**, **Slack**,...
 
 ```
 vi $HOME/monitoring/alert/config.yaml
 ```
 
-**Twilio integration**
+- **Twilio integration**
 
 ```
 easy_api_prom_sms_alert:
@@ -242,7 +242,7 @@ easy_api_prom_sms_alert:
 
 **Reference** : [Twilio Documentation](https://www.twilio.com/en-us/blog/send-sms-twilio-shell-script-curl)
 
-**WhatsApp integration**
+- **WhatsApp integration**
 
 ```
 easy_api_prom_sms_alert:
@@ -281,6 +281,45 @@ easy_api_prom_sms_alert:
 **+xxxxxxx** and **+yyyyyyy** are the WhatsApp accounts that will receive SMS alerts.
 
 **Reference** : [Wassenger Documentation](https://app.wassenger.com/docs/)
+
+- **Slack integration**
+
+```
+easy_api_prom_sms_alert:
+  simulation: false
+  auth:
+    enabled: true
+    username: test
+    password: test@test
+  provider:
+    url: "https://slack.com/api/chat.postMessage"
+    content_type: "application/json"
+    authentication:
+      enabled: true
+      authorization_type: 'Bearer'
+      authorization_credential: 'API_TOKEN'
+    parameters: 
+      from: 
+        param_name: "username"
+        param_value: "prometheus"
+        param_method: "post"
+      to:
+        param_name: "channel"
+        param_value: "administration"
+        param_method: "post"
+      message: 
+        param_name: "text"
+    timeout: 10s
+  recipients: 
+  - name: "administration"
+    members:
+    - "alerts-channel"
+```
+
+**API_TOKEN** is the token that can be retrieved on the **Slack** platform. <br>
+**alerts-channel** is provided as an example of an existing Slack channel. You can create and use your own channel instead.
+
+**Reference** : [Slack Documentation](https://docs.slack.dev/apis/)
 
 - **Starting easy-api-prom-sms-alert with one of the integration contents**
 
