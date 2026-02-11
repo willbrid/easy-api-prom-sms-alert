@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   golangci:
-    name: Lint
+    name: Lint and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,18 +26,5 @@ jobs:
         uses: golangci/golangci-lint-action@v8
         with:
           version: latest
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-            persist-credentials: false
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.25'
-          cache-dependency-path: go.sum
       - name: Test
         run: go test ./...
