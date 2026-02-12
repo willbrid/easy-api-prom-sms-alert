@@ -53,7 +53,7 @@ func TestReadConfigFile_ReturnFileNotFoundError(t *testing.T) {
 func TestReadConfigFile_ReturnFileNotExistError(t *testing.T) {
 	t.Parallel()
 
-	var filename string = "nonexistentfile.yaml"
+	filename := "nonexistentfile.yaml"
 
 	_, err := config.ReadConfigFile(filename)
 
