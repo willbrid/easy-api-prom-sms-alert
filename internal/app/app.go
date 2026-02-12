@@ -31,7 +31,7 @@ func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logg
 		Microservices: microservices,
 		AlertConfig: &domain.AlertConfig{
 			Recipients:           cfgfile.EasyAPIPromAlertSMS.Recipients,
-			DefaultRecipientName: cfgfile.EasyAPIPromAlertSMS.Provider.Parameters.To.ParamValue,
+			DefaultRecipientName: cfgfile.EasyAPIPromAlertSMS.Parameters.To.ParamValue,
 			Simulation:           cfgfile.EasyAPIPromAlertSMS.Simulation,
 		},
 		ILogger: loggerInstance,

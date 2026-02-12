@@ -22,7 +22,7 @@ func (a *AuthMiddleware) Authenticate(next http.Handler, cfg *config.Config) htt
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
 		auth := req.Header.Get("Authorization")
 
-		if cfg.EasyAPIPromAlertSMS.Auth.Enabled && req.URL.Path != "/healthz" {
+		if cfg.EasyAPIPromAlertSMS.Enabled && req.URL.Path != "/healthz" {
 			if auth == "" {
 				http.Error(resp, "invalid credential", http.StatusUnauthorized)
 				return
@@ -43,7 +43,7 @@ func (a *AuthMiddleware) Authenticate(next http.Handler, cfg *config.Config) htt
 			credentialParts := strings.SplitN(string(decodedToken), ":", 2)
 			username := credentialParts[0]
 			password := credentialParts[1]
-			if username != cfg.EasyAPIPromAlertSMS.Auth.Username || password != cfg.EasyAPIPromAlertSMS.Auth.Password {
+			if username != cfg.EasyAPIPromAlertSMS.Username || password != cfg.EasyAPIPromAlertSMS.Password {
 				http.Error(resp, "invalid credential", http.StatusUnauthorized)
 				return
 			}
