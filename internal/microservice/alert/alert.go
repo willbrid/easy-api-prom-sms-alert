@@ -23,7 +23,7 @@ func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTT
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {
 	provider := ams.Provider
-	var headers map[string]string = map[string]string{
+	headers := map[string]string{
 		"Content-Type": provider.ContentType,
 	}
 
@@ -58,7 +58,7 @@ func (ams *AlertMicroservice) GetUrlAndBody(dest string, message string) (string
 		}
 	}
 
-	var encodedURL string = ams.Provider.Url
+	encodedURL := ams.Provider.Url
 	if len(httpParam.Query) > 0 {
 		encodedURL = fmt.Sprintf("%s?%s", encodedURL, httpParam.EncodeQuery())
 	}

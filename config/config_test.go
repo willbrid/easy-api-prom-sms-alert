@@ -19,7 +19,7 @@ func triggerTest(t *testing.T, yamlConfig []byte, expectations []string, index i
 		t.Fatalf("failed to read config: %v", err)
 	}
 
-	var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
+	validate := validator.New(validator.WithRequiredStructEnabled())
 	_, err := config.LoadConfig(v, validate)
 
 	expected := expectations[index]

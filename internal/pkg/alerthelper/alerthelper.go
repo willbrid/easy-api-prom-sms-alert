@@ -10,7 +10,7 @@ import (
 
 // GetRecipientFromAlert get recipient name from template.Alert
 func GetRecipientFromAlert(alert template.Alert, defaultRecipient string) string {
-	var recipientName string = defaultRecipient
+	recipientName := defaultRecipient
 
 	if value, exists := alert.Labels["team"]; exists {
 		recipientName = value
@@ -21,10 +21,8 @@ func GetRecipientFromAlert(alert template.Alert, defaultRecipient string) string
 
 // GetMsgFromAlert generate message to send from alert
 func GetMsgFromAlert(alert template.Alert) string {
-	var (
-		pairs   []string = []string{}
-		message string
-	)
+	var message string
+	pairs := []string{}
 
 	for k, v := range alert.Labels {
 		if k != "team" {

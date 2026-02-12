@@ -20,7 +20,7 @@ func NewAuthMiddleware() *AuthMiddleware {
 
 func (a *AuthMiddleware) Authenticate(next http.Handler, cfg *config.Config) http.Handler {
 	return http.HandlerFunc(func(resp http.ResponseWriter, req *http.Request) {
-		var auth string = req.Header.Get("Authorization")
+		auth := req.Header.Get("Authorization")
 
 		if cfg.EasyAPIPromAlertSMS.Auth.Enabled && req.URL.Path != "/healthz" {
 			if auth == "" {

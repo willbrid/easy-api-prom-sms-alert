@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
+	validate := validator.New(validator.WithRequiredStructEnabled())
 	loggerInstance := logger.NewLogger()
 
 	configFlag, err := config.LoadConfigFlag(validate)

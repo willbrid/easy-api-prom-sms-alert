@@ -84,7 +84,7 @@ func setConfigDefaults(v *viper.Viper) {
 
 // ReadConfigFile reads configuration file and return viper instance
 func ReadConfigFile(filename string) (*viper.Viper, error) {
-	var viperInstance *viper.Viper = viper.New()
+	viperInstance := viper.New()
 
 	// Load configuration file
 	viperInstance.SetConfigType("yaml")

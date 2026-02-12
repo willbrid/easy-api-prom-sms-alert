@@ -96,7 +96,7 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 		t.Fatal(err.Error())
 	}
 
-	var validate *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
+	validate := validator.New(validator.WithRequiredStructEnabled())
 	configLoaded, err := config.LoadConfig(v, validate)
 	if err != nil {
 		t.Fatal(err.Error())
