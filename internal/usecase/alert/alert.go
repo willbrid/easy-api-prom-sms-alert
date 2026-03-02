@@ -2,6 +2,7 @@ package alert
 
 import (
 	"github.com/rs/zerolog"
+
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/domain"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/pkg/alerthelper"
