@@ -10,7 +10,8 @@ import (
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpserver"
-	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
+
+	"github.com/rs/zerolog"
 
 	"fmt"
 	"os"
@@ -18,14 +19,14 @@ import (
 	"syscall"
 )
 
-func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logger.ILogger) {
+func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, logger zerolog.Logger) {
 	httpClient := httpclient.NewHTTPClient()
 	paramFactory := httpparam.NewParamFactory()
 	microservices := microservice.NewMicroservices(microservice.Deps{
 		Provider:      &cfgfile.EasyAPIPromAlertSMS.Provider,
 		IHTTPClient:   httpClient,
 		IParamFactory: paramFactory,
-		ILogger:       loggerInstance,
+		Logger:        logger,
 	})
 	usecases := usecase.NewUsecases(&usecase.Deps{
 		Microservices: microservices,
@@ -34,7 +35,7 @@ func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logg
 			DefaultRecipientName: cfgfile.EasyAPIPromAlertSMS.Parameters.To.ParamValue,
 			Simulation:           cfgfile.EasyAPIPromAlertSMS.Simulation,
 		},
-		ILogger: loggerInstance,
+		Logger: logger,
 	})
 
 	httpServer := httpserver.NewServer(
@@ -43,25 +44,25 @@ func Run(cfgfile *config.Config, cfgflag *config.ConfigFlag, loggerInstance logg
 		cfgflag.CertFile,
 		cfgflag.KeyFile,
 	)
-	authMiddleware := middleware.NewAuthMiddleware()
-	handlerInstance := handler.NewHandler(usecases, httpServer, authMiddleware, loggerInstance)
+	authMiddleware := middleware.NewAuthMiddleware(logger)
+	handlerInstance := handler.NewHandler(usecases, httpServer, authMiddleware, logger)
 	handlerInstance.InitRouter(cfgfile)
 	httpServer.Start()
 
 	scheme := map[bool]string{true: "https", false: "http"}[cfgflag.EnableHttps]
-	loggerInstance.Info("app server is listening on port %v using %s", cfgflag.ListenPort, scheme)
+	logger.Info().Str("scheme", scheme).Int("port", cfgflag.ListenPort).Msg("app server starting")
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
 	select {
 	case s := <-interrupt:
-		loggerInstance.Info("app server - run - signal: %s", s.String())
+		logger.Info().Str("signal", s.String()).Msg("app server stopping")
 	case err := <-httpServer.Notify():
-		loggerInstance.Error("app server error: %v", err.Error())
+		logger.Error().Err(err).Msg("app server stopping")
 	}
 
 	if err := httpServer.Stop(); err != nil {
-		loggerInstance.Error("app server - stop - error: %v", err)
+		logger.Error().Err(err).Msg("app server stopping")
 	}
 }
