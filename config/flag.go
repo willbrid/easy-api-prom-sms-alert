@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog"
 )
 
 type ConfigFlag struct {
@@ -19,7 +20,7 @@ func newConfigFlag(configFile string, listenPort int, enableHttps bool, certFile
 	return &ConfigFlag{configFile, listenPort, enableHttps, certFile, keyFile}
 }
 
-func LoadConfigFlag(validate *validator.Validate) (*ConfigFlag, error) {
+func LoadConfigFlag(validate *validator.Validate, logger zerolog.Logger) (*ConfigFlag, error) {
 	var (
 		configFile  string
 		listenPort  int
@@ -37,11 +38,13 @@ func LoadConfigFlag(validate *validator.Validate) (*ConfigFlag, error) {
 
 	boolEnableHttps, err := strconv.ParseBool(enableHttps)
 	if err != nil {
+		logger.Error().Err(err).Str("enable-https", string(enableHttps)).Msg("failed to parse flag enableHttps")
 		return nil, err
 	}
 
 	cfgflag := newConfigFlag(configFile, listenPort, boolEnableHttps, certFile, keyFile)
 	if err := validate.Struct(cfgflag); err != nil {
+		logger.Error().Err(err).Msg("failed to validate configuration flag")
 		return nil, err
 	}
 
