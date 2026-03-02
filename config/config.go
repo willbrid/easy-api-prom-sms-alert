@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/rs/zerolog"
 	"github.com/spf13/viper"
 )
 
@@ -83,7 +84,7 @@ func setConfigDefaults(v *viper.Viper) {
 }
 
 // ReadConfigFile reads configuration file and return viper instance
-func ReadConfigFile(filename string) (*viper.Viper, error) {
+func ReadConfigFile(filename string, logger zerolog.Logger) (*viper.Viper, error) {
 	viperInstance := viper.New()
 
 	// Load configuration file
@@ -92,8 +93,10 @@ func ReadConfigFile(filename string) (*viper.Viper, error) {
 
 	if err := viperInstance.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
+			logger.Error().Err(err).Str("config_file", filename).Msg("configuration file not found")
 			return nil, fmt.Errorf("configuration file '%s' not found", filename)
 		} else {
+			logger.Error().Err(err).Msg("configuration file reading failed")
 			return nil, err
 		}
 	}
@@ -102,23 +105,26 @@ func ReadConfigFile(filename string) (*viper.Viper, error) {
 }
 
 // LoadConfig load yaml configuration file
-func LoadConfig(viperInstance *viper.Viper, validate *validator.Validate) (*Config, error) {
+func LoadConfig(viperInstance *viper.Viper, validate *validator.Validate, logger zerolog.Logger) (*Config, error) {
 	// Set defaut configuration
 	setConfigDefaults(viperInstance)
 
 	// Parse configuration file to Config struct
 	var config Config
 	if err := viperInstance.Unmarshal(&config); err != nil {
+		logger.Error().Err(err).Msg("unabled to unmarshal config struct")
 		return nil, err
 	}
 
 	// Validate config struct
 	if err := validate.Struct(config); err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
+			logger.Error().Err(err).Msg("failed to validate config struct")
 			return nil, err
 		}
 
 		for _, err := range err.(validator.ValidationErrors) {
+			logger.Error().Err(err).Str(err.Field(), err.Tag()).Msg("failed to validate config struct field")
 			return nil, fmt.Errorf("validation failed on field '%s' for condition '%s'", err.Field(), err.Tag())
 		}
 	}

@@ -2,6 +2,7 @@ package config_test
 
 import (
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logging"
 
 	"bytes"
 	"fmt"
@@ -14,13 +15,14 @@ import (
 func triggerTest(t *testing.T, yamlConfig []byte, expectations []string, index int) {
 	v := viper.New()
 	v.SetConfigType("yaml")
+	logger := logging.InitLogger()
 
 	if err := v.ReadConfig(bytes.NewBuffer([]byte(yamlConfig))); err != nil {
 		t.Fatalf("failed to read config: %v", err)
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
-	_, err := config.LoadConfig(v, validate)
+	_, err := config.LoadConfig(v, validate, logger)
 
 	expected := expectations[index]
 
@@ -36,9 +38,10 @@ func triggerTest(t *testing.T, yamlConfig []byte, expectations []string, index i
 func TestReadConfigFile_ReturnFileNotFoundError(t *testing.T) {
 	t.Parallel()
 
+	logger := logging.InitLogger()
 	var filename string
 
-	_, err := config.ReadConfigFile(filename)
+	_, err := config.ReadConfigFile(filename, logger)
 	expected := "configuration file '' not found"
 
 	if err == nil {
@@ -53,9 +56,10 @@ func TestReadConfigFile_ReturnFileNotFoundError(t *testing.T) {
 func TestReadConfigFile_ReturnFileNotExistError(t *testing.T) {
 	t.Parallel()
 
+	logger := logging.InitLogger()
 	filename := "nonexistentfile.yaml"
 
-	_, err := config.ReadConfigFile(filename)
+	_, err := config.ReadConfigFile(filename, logger)
 
 	expected := "open nonexistentfile.yaml: no such file or directory"
 
