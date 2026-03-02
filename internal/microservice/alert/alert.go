@@ -1,10 +1,11 @@
 package alert
 
 import (
+	"github.com/rs/zerolog"
+
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
-	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 
 	"fmt"
 	"strings"
@@ -14,11 +15,11 @@ type AlertMicroservice struct {
 	Provider      *config.Provider
 	iHTTPClient   httpclient.IHTTPClient
 	iParamFactory httpparam.IParamFactory
-	iLogger       logger.ILogger
+	logger        zerolog.Logger
 }
 
-func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iParamFactory httpparam.IParamFactory, iLogger logger.ILogger) *AlertMicroservice {
-	return &AlertMicroservice{provider, iHTTPClient, iParamFactory, iLogger}
+func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iParamFactory httpparam.IParamFactory, logger zerolog.Logger) *AlertMicroservice {
+	return &AlertMicroservice{provider, iHTTPClient, iParamFactory, logger}
 }
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {
@@ -38,7 +39,7 @@ func (ams *AlertMicroservice) Consume(url string, body string) error {
 	})
 
 	if err != nil {
-		ams.iLogger.Error(fmt.Sprintf("failed to send alert to %s: %v", url, err))
+		ams.logger.Error().Err(err).Msgf("failed to send alert to %s", url)
 		return err
 	}
 
@@ -65,7 +66,7 @@ func (ams *AlertMicroservice) GetUrlAndBody(dest string, message string) (string
 
 	body, err := httpParam.EncodePost(ams.Provider.ContentType)
 	if err != nil {
-		ams.iLogger.Error(fmt.Sprintf("failed to encode post parameters: %v", err))
+		ams.logger.Error().Err(err).Msg("failed to encode post parameters")
 		return "", "", err
 	}
 

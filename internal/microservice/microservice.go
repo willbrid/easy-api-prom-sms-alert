@@ -1,11 +1,12 @@
 package microservice
 
 import (
+	"github.com/rs/zerolog"
+
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/microservice/alert"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpclient"
 	"github.com/willbrid/easy-api-prom-alert-sms/pkg/httpparam"
-	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
 type IAlertMicroservice interface {
@@ -17,7 +18,7 @@ type Deps struct {
 	Provider      *config.Provider
 	IHTTPClient   httpclient.IHTTPClient
 	IParamFactory httpparam.IParamFactory
-	ILogger       logger.ILogger
+	Logger        zerolog.Logger
 }
 
 type Microservices struct {
@@ -26,6 +27,6 @@ type Microservices struct {
 
 func NewMicroservices(deps Deps) *Microservices {
 	return &Microservices{
-		IAlertMicroservice: alert.NewAlertMicroservice(deps.Provider, deps.IHTTPClient, deps.IParamFactory, deps.ILogger),
+		IAlertMicroservice: alert.NewAlertMicroservice(deps.Provider, deps.IHTTPClient, deps.IParamFactory, deps.Logger),
 	}
 }
