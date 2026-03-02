@@ -1,15 +1,16 @@
 package httphandler
 
 import (
+	"github.com/rs/zerolog"
+
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/usecase"
-	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logger"
 )
 
 type HTTPHandler struct {
 	Usecases *usecase.Usecases
-	iLogger  logger.ILogger
+	logger   zerolog.Logger
 }
 
-func NewHTTPHandler(usecases *usecase.Usecases, iLogger logger.ILogger) *HTTPHandler {
-	return &HTTPHandler{usecases, iLogger}
+func NewHTTPHandler(usecases *usecase.Usecases, logger zerolog.Logger) *HTTPHandler {
+	return &HTTPHandler{usecases, logger}
 }
