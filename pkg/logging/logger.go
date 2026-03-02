@@ -11,7 +11,7 @@ func InitLogger() zerolog.Logger {
 	zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	zerolog.TimeFieldFormat = time.RFC3339
 
-	logger := zerolog.New(os.Stdout).
+	logger := zerolog.New(zerolog.ConsoleWriter{Out: os.Stdout}).
 		With().
 		Timestamp().
 		Caller().
