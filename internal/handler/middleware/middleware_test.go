@@ -3,6 +3,7 @@ package middleware_test
 import (
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
 	"github.com/willbrid/easy-api-prom-alert-sms/internal/handler/middleware"
+	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logging"
 
 	"bytes"
 	"io"
@@ -97,7 +98,8 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
-	configLoaded, err := config.LoadConfig(v, validate)
+	logger := logging.InitLogger()
+	configLoaded, err := config.LoadConfig(v, validate, logger)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -119,7 +121,7 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 		resp.WriteHeader(http.StatusNoContent)
 	}).Methods("POST")
 	router.Use(func(h http.Handler) http.Handler {
-		authMiddleware := middleware.NewAuthMiddleware()
+		authMiddleware := middleware.NewAuthMiddleware(logger)
 		return authMiddleware.Authenticate(h, configLoaded)
 	})
 	router.ServeHTTP(rr, req)
