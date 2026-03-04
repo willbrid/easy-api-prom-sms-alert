@@ -18,13 +18,13 @@ func main() {
 		return
 	}
 
-	viperInstance, err := config.ReadConfigFile(configFlag.ConfigFile, logger)
+	viperInstance, err := config.ReadConfigFile(configFlag.ConfigFile)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to read configuration file")
 		return
 	}
 
-	configLoaded, err := config.LoadConfig(viperInstance, validate, logger)
+	configLoaded, err := config.LoadConfig(viperInstance, validate)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to load configuration file")
 		return
