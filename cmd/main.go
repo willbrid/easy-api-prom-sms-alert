@@ -12,7 +12,7 @@ func main() {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	logger := logging.InitLogger()
 
-	configFlag, err := config.LoadConfigFlag(validate, logger)
+	configFlag, err := config.LoadConfigFlag(validate)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to load configuration flags")
 		return
