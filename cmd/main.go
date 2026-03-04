@@ -15,16 +15,19 @@ func main() {
 	configFlag, err := config.LoadConfigFlag(validate, logger)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to load configuration flags")
+		return
 	}
 
 	viperInstance, err := config.ReadConfigFile(configFlag.ConfigFile, logger)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to read configuration file")
+		return
 	}
 
 	configLoaded, err := config.LoadConfig(viperInstance, validate, logger)
 	if err != nil {
 		logger.Error().Err(err).Msg("failed to load configuration file")
+		return
 	}
 
 	logger.Info().Str("config_file", configFlag.ConfigFile).Msg("configuration file was loaded successfully")
