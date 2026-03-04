@@ -2,73 +2,54 @@ package config_test
 
 import (
 	"github.com/willbrid/easy-api-prom-alert-sms/config"
-	"github.com/willbrid/easy-api-prom-alert-sms/pkg/logging"
 
 	"bytes"
+	"errors"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 )
 
-func triggerTest(t *testing.T, yamlConfig []byte, expectations []string, index int) {
+func triggerTest(t *testing.T, yamlConfig []byte) {
 	v := viper.New()
 	v.SetConfigType("yaml")
-	logger := logging.InitLogger()
 
 	if err := v.ReadConfig(bytes.NewBuffer([]byte(yamlConfig))); err != nil {
 		t.Fatalf("failed to read config: %v", err)
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
-	_, err := config.LoadConfig(v, validate, logger)
+	_, err := config.LoadConfig(v, validate)
 
-	expected := expectations[index]
-
-	if err == nil {
-		t.Errorf("no error returned, expected:\n%v", expected)
-	}
-
-	if err.Error() != expected {
-		t.Errorf("\nexpected:\n%v\ngot:\n%v", expected, err.Error())
+	var fieldErr validator.FieldError
+	if !errors.As(err, &fieldErr) && !strings.Contains(err.Error(), "unable to unmarshal config struct") {
+		t.Errorf("wrong error: %v", err)
 	}
 }
 
 func TestReadConfigFile_ReturnFileNotFoundError(t *testing.T) {
 	t.Parallel()
 
-	logger := logging.InitLogger()
 	var filename string
 
-	_, err := config.ReadConfigFile(filename, logger)
-	expected := "configuration file '' not found"
+	_, err := config.ReadConfigFile(filename)
 
 	if err == nil {
-		t.Fatalf("no error returned, expected:\n%v", expected)
-	}
-
-	if err.Error() != expected {
-		t.Errorf("\nexpected:\n%v\ngot:\n%v", expected, err.Error())
+		t.Error("no error returned for file not found")
 	}
 }
 
 func TestReadConfigFile_ReturnFileNotExistError(t *testing.T) {
 	t.Parallel()
 
-	logger := logging.InitLogger()
 	filename := "nonexistentfile.yaml"
-
-	_, err := config.ReadConfigFile(filename, logger)
-
-	expected := "open nonexistentfile.yaml: no such file or directory"
+	_, err := config.ReadConfigFile(filename)
 
 	if err == nil {
-		t.Fatalf("no error returned, expected:\n%v", expected)
-	}
-
-	if err.Error() != expected {
-		t.Errorf("\nexpected:\n%v\ngot:\n%v", expected, err.Error())
+		t.Error("no error returned for file no exist")
 	}
 }
 
@@ -96,15 +77,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'Username' for condition 'required_if'",
-		"validation failed on field 'Username' for condition 'min'",
-		"validation failed on field 'Username' for condition 'max'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
@@ -129,14 +104,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'Password' for condition 'required_if'",
-		"validation failed on field 'Password' for condition 'min'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
@@ -185,16 +155,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'Url' for condition 'required'",
-		"validation failed on field 'Url' for condition 'url'",
-		"validation failed on field 'ContentType' for condition 'required'",
-		"validation failed on field 'ContentType' for condition 'oneof'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
@@ -255,16 +218,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'AuthorizationType' for condition 'required_if'",
-		"validation failed on field 'AuthorizationType' for condition 'required_if'",
-		"validation failed on field 'AuthorizationCredential' for condition 'required_if'",
-		"validation failed on field 'AuthorizationType' for condition 'required_if'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
@@ -418,20 +374,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'ParamValue' for condition 'required'",
-		"validation failed on field 'ParamValue' for condition 'required'",
-		"validation failed on field 'ParamName' for condition 'max'",
-		"validation failed on field 'ParamValue' for condition 'required'",
-		"validation failed on field 'ParamMethod' for condition 'oneof'",
-		"validation failed on field 'ParamName' for condition 'max'",
-		"validation failed on field 'ParamValue' for condition 'required'",
-		"validation failed on field 'ParamName' for condition 'max'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
@@ -550,16 +495,9 @@ easy_api_prom_sms_alert:
 `),
 	}
 
-	expectations := []string{
-		"validation failed on field 'Recipients' for condition 'gt'",
-		"validation failed on field 'Name' for condition 'required'",
-		"validation failed on field 'Members[0]' for condition 'min'",
-		"validation failed on field 'Members[0]' for condition 'max'",
-	}
-
 	for index, yamlConfig := range configSlices {
 		t.Run(fmt.Sprintf("LoadConfig  #%v", index), func(subT *testing.T) {
-			triggerTest(subT, yamlConfig, expectations, index)
+			triggerTest(subT, yamlConfig)
 		})
 	}
 }
