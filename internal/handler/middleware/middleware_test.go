@@ -98,8 +98,7 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 	}
 
 	validate := validator.New(validator.WithRequiredStructEnabled())
-	logger := logging.InitLogger()
-	configLoaded, err := config.LoadConfig(v, validate, logger)
+	configLoaded, err := config.LoadConfig(v, validate)
 	if err != nil {
 		t.Fatal(err.Error())
 	}
@@ -115,6 +114,7 @@ func triggerTest(t *testing.T, statusCode int, credential string, reqBody io.Rea
 
 	rr := httptest.NewRecorder()
 
+	logger := logging.InitLogger()
 	router := mux.NewRouter()
 	router.HandleFunc("/api-alert", func(resp http.ResponseWriter, req *http.Request) {
 		resp.Header().Set("Content-Type", "application/json")
