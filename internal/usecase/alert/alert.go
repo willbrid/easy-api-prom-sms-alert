@@ -16,7 +16,11 @@ type AlertUseCase struct {
 }
 
 func NewAlertUseCase(iMsc microservice.IAlertMicroservice, alertConfig *domain.AlertConfig, logger zerolog.Logger) *AlertUseCase {
-	return &AlertUseCase{iMsc, alertConfig, logger}
+	return &AlertUseCase{
+		iMsc:        iMsc,
+		alertConfig: alertConfig,
+		logger:      logger.With().Str("layer", "usecase").Str("component", "alert").Logger(),
+	}
 }
 
 func (auc *AlertUseCase) Send(alertData domain.Alert) error {
@@ -46,5 +50,6 @@ func (auc *AlertUseCase) Send(alertData domain.Alert) error {
 		}
 	}
 
+	auc.logger.Info().Msg("alert sended")
 	return nil
 }

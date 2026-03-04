@@ -19,7 +19,12 @@ type AlertMicroservice struct {
 }
 
 func NewAlertMicroservice(provider *config.Provider, iHTTPClient httpclient.IHTTPClient, iParamFactory httpparam.IParamFactory, logger zerolog.Logger) *AlertMicroservice {
-	return &AlertMicroservice{provider, iHTTPClient, iParamFactory, logger}
+	return &AlertMicroservice{
+		Provider:      provider,
+		iHTTPClient:   iHTTPClient,
+		iParamFactory: iParamFactory,
+		logger:        logger.With().Str("layer", "microservice").Str("component", "alert").Logger(),
+	}
 }
 
 func (ams *AlertMicroservice) Consume(url string, body string) error {

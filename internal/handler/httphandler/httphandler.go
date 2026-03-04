@@ -12,5 +12,8 @@ type HTTPHandler struct {
 }
 
 func NewHTTPHandler(usecases *usecase.Usecases, logger zerolog.Logger) *HTTPHandler {
-	return &HTTPHandler{usecases, logger}
+	return &HTTPHandler{
+		Usecases: usecases,
+		logger:   logger.With().Str("layer", "handler").Logger(),
+	}
 }
