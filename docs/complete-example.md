@@ -340,4 +340,4 @@ In order to simulate the shutdown of the **monitoring-server**, we stop the **no
 podman container stop node-exporter
 ```
 
-After one minute, we will see an SMS alert on our phone (**Twilio integration**) or on our WhatsApp account (**WhatsApp integration**).
+After one minute, we will see an SMS alert on our phone (**Twilio integration**) or on our WhatsApp account (**WhatsApp integration**) or on our Slack channel (**slack integration**).
