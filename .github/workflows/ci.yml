@@ -20,11 +20,13 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@v5
         with:
-          go-version: '1.26'
+          go-version: '1.27'
           cache-dependency-path: go.sum
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
         with:
           version: latest
-      - name: Test
+      - name: Test vet
+        run: go vet ./...
+      - name: Test test
         run: go test ./...
